@@ -1,0 +1,85 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-image: url('https://content.api.news/v3/images/bin/996141cf1b184ec8c087e484e2aa961e');
+  filter: brightness(85%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  flex: 3;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+.password-screen {
+  max-width: 485px;
+  margin: 100px auto;
+  padding: 35px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+  text-align: center;
+}
+
+.password-screen input { margin-top: 20px; }
+
+.container-main { display: none; animation: fadeIn 1s ease-in-out; }
+
+.race-block {
+  background: rgba(33, 37, 41, 0.9);
+  color: white;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-left: 5px solid #ffc107;
+  border-radius: 8px;
+  font-family: monospace;
+}
+
+.race-meeting { font-weight: 700; font-size: 1.2rem; color: #ffc107; }
+.race-number { color: #28a745; font-weight: bold; }
+.race-time { color: #17a2b8; font-weight: bold; }
+.race-prize { color: #ffc107; font-weight: bold; }
+
+textarea, input:not(.input-light) {
+  background-color: rgba(204, 238, 255, 0.5) !important;
+  color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.input-light {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  color: #000;
+}
+
+.icon-img {
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:block;
+  margin:0 auto 10px;
+}
+
+.icon-img-vert {
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  vertical-align:middle;
+  margin-right:8px;
+}
+
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+footer {
+  text-align: center;
+  color: #ffc107;
+  padding: 15px;
+  background: rgba(20, 20, 20, 0.85);
+}

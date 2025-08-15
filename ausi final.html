@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Australia Horse Races</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://content.api.news/v3/images/bin/996141cf1b184ec8c087e484e2aa961e');
+      filter: brightness(85%);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.4);
+      flex: 3;
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+    .password-screen {
+      max-width: 485px;
+      margin: 100px auto;
+      padding: 35px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00FF00;
+      text-align: center;
+    }
+    .password-screen input { margin-top: 20px; }
+    .container-main { display: none; animation: fadeIn 1s ease-in-out; }
+    .race-block {
+      background: rgba(33, 37, 41, 0.9);
+      color: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-left: 5px solid #ffc107;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+    .race-meeting { font-weight: 700; font-size: 1.2rem; color: #ffc107; }
+    .race-number { color: #28a745; font-weight: bold; }
+    .race-time { color: #17a2b8; font-weight: bold; }
+    .race-prize { color: #ffc107; font-weight: bold; }
+    textarea, input:not(.input-light) {
+      background-color: rgba(204, 238, 255, 0.5) !important;
+      color: #000;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .input-light {
+      background-color: rgba(255, 255, 255, 0.5) !important;
+      color: #000;
+    }
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    footer {
+      text-align: center;
+      color: #ffc107;
+      padding: 15px;
+      background: rgba(20, 20, 20, 0.85);
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div id="passwordScreen" class="password-screen">
+     <h2 class="text-warning mb-3 text-center">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8xdWTPH-osAzbZ1dwqXKBRF70DS2XaDRwpLe1zmgokg0yk_vSgfxjJL2bUn-8jQH7FuY&usqp=CAU" 
+             alt="Icon" 
+             style="width:50px; height:50px; border-radius:50%; display:block; margin:0 auto 10px;">
+        AUSTRALIA ELIGIBLE RACES
+      </h2>
+      <img src="https://st.depositphotos.com/1313626/54427/i/450/depositphotos_544271302-stock-illustration-three-racing-horses-competing-with.jpg" width="255" />
+      <input type="password" id="password" class="form-control" placeholder="Enter Password..." />
+      <button class="btn btn-warning mt-3" onclick="checkPassword()">Unlock Premium Access</button>
+    </div>
+
+    <div class="container container-main" id="mainContent">
+      <h2 class="text-light mb-4">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8xdWTPH-osAzbZ1dwqXKBRF70DS2XaDRwpLe1zmgokg0yk_vSgfxjJL2bUn-8jQH7FuY&usqp=CAU" 
+             alt="Icon" 
+             style="width:50px; height:50px; border-radius:50%; vertical-align:middle; margin-right:8px;">
+        Australia Race Selection Dashboard
+      </h2>
+
+      <textarea id="raceText" rows="15" class="form-control mb-3 input-light" placeholder="Paste race card text here..."></textarea>
+      <input type="file" id="raceFile1" class="form-control mb-2 input-light" accept=".txt" multiple title="Choose File 1" />
+      <input type="text" id="meetingsInput" class="form-control mb-3" placeholder="Enter meeting names (comma separated)" />
+      <small class="text-light">Only races from these meetings will be shown. Leave empty to show all.</small>
+
+      <div class="row mb-3 mt-3">
+        <div class="col"><input type="number" id="minPrize" class="form-control" placeholder="Min Prize ($)" /></div>
+        <div class="col"><input type="number" id="maxPrize" class="form-control" placeholder="Max Prize ($)" /></div>
+      </div>
+
+      <div class="d-flex gap-2 mb-4">
+        <button class="btn btn-success" onclick="processText()">Process & Filter</button>
+        <button class="btn btn-warning" onclick="showTop5()">Show Top 5</button>
+        <button class="btn btn-info" onclick="showTop15()">Show Top 15</button>
+        <button class="btn btn-danger" onclick="clearAll()">Clear All</button>
+      </div>
+
+      <div id="output"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Copyright © 2025 Charith Neranga. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let lastRaces = [];
+
+    document.getElementById("password").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") checkPassword();
+    });
+
+    function checkPassword() {
+      const entered = document.getElementById("password").value;
+      if (entered === "lal1234") {
+        document.getElementById("passwordScreen").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;");
+    }
+
+    function clearAll() {
+      document.getElementById('raceText').value = '';
+      for (let i = 1; i <= 10; i++) {
+        const el = document.getElementById('raceFile' + i);
+        if (el) el.value = '';
+      }
+      document.getElementById('meetingsInput').value = '';
+      document.getElementById('minPrize').value = '';
+      document.getElementById('maxPrize').value = '';
+      document.getElementById('output').innerHTML = '';
+      lastRaces = [];
+    }
+
+    for (let i = 1; i <= 10; i++) {
+      const el = document.getElementById('raceFile' + i);
+      if (!el) continue;
+      el.addEventListener('change', function(e){
+        const files = e.target.files;
+        if (!files.length) return;
+        Array.from(files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function(evt){
+            document.getElementById('raceText').value += evt.target.result + '\n';
+          };
+          reader.readAsText(file);
+        });
+      });
+    }
+
+    function processText() {
+      const text = document.getElementById('raceText').value;
+      const output = document.getElementById('output');
+      const minPrize = parseInt(document.getElementById('minPrize').value || 0);
+      const maxPrize = parseInt(document.getElementById('maxPrize').value || 9999999);
+
+      const meetingsRaw = document.getElementById('meetingsInput').value;
+      const meetingsFilter = meetingsRaw
+        ? meetingsRaw.split(',').map(m => m.trim().toUpperCase()).filter(m => m.length > 0)
+        : [];
+
+      if (!text.trim()) {
+        alert('Please paste race card text or upload a file first.');
+        return;
+      }
+
+      const lines = text.split(/\r?\n/);
+      let races = [];
+      let currentMeeting = '';
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.includes('@Cour:')) {
+          const courMatch = line.match(/@Cour:([^\s]+)/);
+          currentMeeting = courMatch ? courMatch[1] : '';
+        }
+        if (line.startsWith('@Race:')) {
+          const raceLine = line.replace('@Race:', '').trim();
+          const raceMatch = raceLine.match(/^(\S+)\s+(\d{1,2}:\d{2})\s*\(?(\d{1,2}:\d{2})?\)?\s*(.+)\s+\$([\d,]+)/);
+          if (!raceMatch) continue;
+          const raceNumber = raceMatch[1];
+          const AusiTime = raceMatch[2];
+          const slTime = raceMatch[3] || 'N/A';
+          const raceName = raceMatch[4];
+          const prize = parseInt(raceMatch[5].replace(/,/g, ''));
+          if (meetingsFilter.length && !meetingsFilter.includes(currentMeeting.toUpperCase())) continue;
+          if (prize < minPrize || prize > maxPrize) continue;
+          races.push({ meeting: currentMeeting, raceNumber, AusiTime, rawSLTime: slTime, raceName, prize });
+        }
+      }
+
+      if (!races.length) {
+        output.innerHTML = '<p class="text-warning">No races found for the selected criteria.</p>';
+        lastRaces = [];
+        return;
+      }
+
+      races.sort((a, b) => {
+        const timeToMinutes = t => {
+          if (t === 'N/A') return 9999;
+          const parts = t.split(/[:.]/).map(Number);
+          return (parts[0] || 0) * 60 + (parts[1] || 0);
+        };
+        return timeToMinutes(a.rawSLTime) - timeToMinutes(b.rawSLTime);
+      });
+
+      lastRaces = races; // store for Top buttons
+      displayRaces(races);
+    }
+
+    function showTop5() {
+      if (!lastRaces.length) {
+        alert("Please process races first.");
+        return;
+      }
+      const top5 = [...lastRaces].sort((a, b) => b.prize - a.prize).slice(0, 5);
+      displayRaces(top5);
+    }
+
+    function showTop15() {
+      if (!lastRaces.length) {
+        alert("Please process races first.");
+        return;
+      }
+      const top15 = [...lastRaces].sort((a, b) => b.prize - a.prize).slice(0, 15);
+      displayRaces(top15);
+    }
+
+    function displayRaces(races) {
+      const output = document.getElementById('output');
+      output.innerHTML = races.map(r => `
+        <div class="race-block">
+          <div class="race-meeting">Race Course: ${r.meeting}</div>
+          <div class="race-number">Race Number: ${r.raceNumber}</div>
+          <div class="race-time">Ausi Time: ${r.AusiTime}</div>
+          <div class="race-time">SL Time: ${r.rawSLTime}</div>
+          <div>Race Name: ${escapeHtml(r.raceName)}</div>
+          <div class="race-prize">Prize Money: $${r.prize.toLocaleString()}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
