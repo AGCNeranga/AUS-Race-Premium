@@ -32,7 +32,7 @@ function clearAll() {
   document.getElementById('output').innerHTML = '';
   lastRaces = [];
 }
-
+<!-- charith neranga website -->
 for (let i = 1; i <= 10; i++) {
   const el = document.getElementById('raceFile' + i);
   if (!el) continue;
@@ -140,3 +140,4 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
+
