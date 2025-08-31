@@ -72,8 +72,9 @@ function processText() {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     if (line.includes('@Cour:')) {
-      const courMatch = line.match(/@Cour:([^\s]+)/);
-      currentMeeting = courMatch ? courMatch[1] : '';
+      // Only take letters before any number (removes date)
+      const courMatch = line.match(/@Cour:([^\d]+)/);
+      currentMeeting = courMatch ? courMatch[1].trim() : '';
     }
     if (line.startsWith('@Race:')) {
       const raceLine = line.replace('@Race:', '').trim();
@@ -171,8 +172,6 @@ function showAllMeetingsBest() {
 }
 
 
-// top 10 code charith
-
 function displayRaces(races) {
   const output = document.getElementById('output');
   output.innerHTML = races.map(r => `
@@ -186,7 +185,3 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
-
-
-
-
