@@ -32,7 +32,8 @@ function clearAll() {
   document.getElementById('output').innerHTML = '';
   lastRaces = [];
 }
-//charith neranga website
+
+// File upload listeners
 for (let i = 1; i <= 10; i++) {
   const el = document.getElementById('raceFile' + i);
   if (!el) continue;
@@ -72,8 +73,8 @@ function processText() {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     if (line.includes('@Cour:')) {
-      const courMatch = line.match(/@Cour:([^\s]+)/);
-      currentMeeting = courMatch ? courMatch[1] : '';
+      const courMatch = line.match(/@Cour:(.+)/); // FIX: full meeting name
+      currentMeeting = courMatch ? courMatch[1].trim() : 'Unknown';
     }
     if (line.startsWith('@Race:')) {
       const raceLine = line.replace('@Race:', '').trim();
@@ -136,43 +137,37 @@ function showTop40() {
   displayRaces(top40);
 }
 
-// top 10 code charith
+// ---- ADDED FUNCTIONS ----
+
+// Top 10 Meetings (one best race per meeting)
 function showTop10Meetings() {
-  if (!lastRaces.length) {
-    alert("Please process races first.");
-    return;
-  }
+  if (!lastRaces.length) { alert("Please process races first."); return; }
   const bestRacesByMeeting = {};
   lastRaces.forEach(race => {
-    const meetingKey = (race.meeting || '').toString().trim() || 'Unknown';
+    const meetingKey = (race.meeting || 'Unknown').trim();
     if (!bestRacesByMeeting[meetingKey] || race.prize > bestRacesByMeeting[meetingKey].prize) {
-      bestRacesByMeeting[meetingKey] = Object.assign({}, race, { meeting: meetingKey });
+      bestRacesByMeeting[meetingKey] = race;
     }
   });
-  const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
-  const top10Meetings = bestRaces.slice(0, 10);
-  displayRaces(top10Meetings);
+  const bestRaces = Object.values(bestRacesByMeeting).sort((a,b)=>b.prize - a.prize);
+  displayRaces(bestRaces.slice(0,10));
 }
 
+// All Meetings Best (one best race per meeting)
 function showAllMeetingsBest() {
-  if (!lastRaces.length) {
-    alert("Please process races first.");
-    return;
-  }
+  if (!lastRaces.length) { alert("Please process races first."); return; }
   const bestRacesByMeeting = {};
   lastRaces.forEach(race => {
-    const meetingKey = (race.meeting || '').toString().trim() || 'Unknown';
+    const meetingKey = (race.meeting || 'Unknown').trim();
     if (!bestRacesByMeeting[meetingKey] || race.prize > bestRacesByMeeting[meetingKey].prize) {
-      bestRacesByMeeting[meetingKey] = Object.assign({}, race, { meeting: meetingKey });
+      bestRacesByMeeting[meetingKey] = race;
     }
   });
-  const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
+  const bestRaces = Object.values(bestRacesByMeeting).sort((a,b)=>b.prize - a.prize);
   displayRaces(bestRaces);
 }
 
-
-// top 10 code charith
-
+// Display function (unchanged)
 function displayRaces(races) {
   const output = document.getElementById('output');
   output.innerHTML = races.map(r => `
@@ -186,8 +181,3 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
-
-
-
-
-
