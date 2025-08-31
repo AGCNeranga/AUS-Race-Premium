@@ -137,27 +137,20 @@ function showTop40() {
 }
 
 // top 10 code charith
-
 function showTop10Meetings() {
   if (!lastRaces.length) {
     alert("Please process races first.");
     return;
   }
-
-  // Group races by meeting, pick highest prize
   const bestRacesByMeeting = {};
   lastRaces.forEach(race => {
-    if (!bestRacesByMeeting[race.meeting] || race.prize > bestRacesByMeeting[race.meeting].prize) {
-      bestRacesByMeeting[race.meeting] = race;
+    const meetingKey = (race.meeting || '').toString().trim() || 'Unknown';
+    if (!bestRacesByMeeting[meetingKey] || race.prize > bestRacesByMeeting[meetingKey].prize) {
+      bestRacesByMeeting[meetingKey] = Object.assign({}, race, { meeting: meetingKey });
     }
   });
-
-  // Convert to array and sort by prize
   const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
-
-  // Take top 10
   const top10Meetings = bestRaces.slice(0, 10);
-
   displayRaces(top10Meetings);
 }
 
@@ -166,20 +159,18 @@ function showAllMeetingsBest() {
     alert("Please process races first.");
     return;
   }
-
-  // Group races by meeting, pick highest prize
   const bestRacesByMeeting = {};
   lastRaces.forEach(race => {
-    if (!bestRacesByMeeting[race.meeting] || race.prize > bestRacesByMeeting[race.meeting].prize) {
-      bestRacesByMeeting[race.meeting] = race;
+    const meetingKey = (race.meeting || '').toString().trim() || 'Unknown';
+    if (!bestRacesByMeeting[meetingKey] || race.prize > bestRacesByMeeting[meetingKey].prize) {
+      bestRacesByMeeting[meetingKey] = Object.assign({}, race, { meeting: meetingKey });
     }
   });
-
-  // Convert to array and sort by prize
   const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
-
   displayRaces(bestRaces);
 }
+
+
 // top 10 code charith
 
 function displayRaces(races) {
@@ -195,6 +186,7 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
+
 
 
 
