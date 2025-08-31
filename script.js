@@ -32,8 +32,7 @@ function clearAll() {
   document.getElementById('output').innerHTML = '';
   lastRaces = [];
 }
-
-// File upload listeners
+//charith neranga website
 for (let i = 1; i <= 10; i++) {
   const el = document.getElementById('raceFile' + i);
   if (!el) continue;
@@ -73,8 +72,8 @@ function processText() {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     if (line.includes('@Cour:')) {
-      const courMatch = line.match(/@Cour:(.+)/); // FIX: full meeting name
-      currentMeeting = courMatch ? courMatch[1].trim() : 'Unknown';
+      const courMatch = line.match(/@Cour:([^\s]+)/);
+      currentMeeting = courMatch ? courMatch[1] : '';
     }
     if (line.startsWith('@Race:')) {
       const raceLine = line.replace('@Race:', '').trim();
@@ -137,37 +136,43 @@ function showTop40() {
   displayRaces(top40);
 }
 
-// ---- ADDED FUNCTIONS ----
-
-// Top 10 Meetings (one best race per meeting)
+// top 10 code charith
 function showTop10Meetings() {
-  if (!lastRaces.length) { alert("Please process races first."); return; }
+  if (!lastRaces.length) {
+    alert("Please process races first.");
+    return;
+  }
   const bestRacesByMeeting = {};
   lastRaces.forEach(race => {
-    const meetingKey = (race.meeting || 'Unknown').trim();
+    const meetingKey = (race.meeting || '').toString().trim() || 'Unknown';
     if (!bestRacesByMeeting[meetingKey] || race.prize > bestRacesByMeeting[meetingKey].prize) {
-      bestRacesByMeeting[meetingKey] = race;
+      bestRacesByMeeting[meetingKey] = Object.assign({}, race, { meeting: meetingKey });
     }
   });
-  const bestRaces = Object.values(bestRacesByMeeting).sort((a,b)=>b.prize - a.prize);
-  displayRaces(bestRaces.slice(0,10));
+  const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
+  const top10Meetings = bestRaces.slice(0, 10);
+  displayRaces(top10Meetings);
 }
 
-// All Meetings Best (one best race per meeting)
 function showAllMeetingsBest() {
-  if (!lastRaces.length) { alert("Please process races first."); return; }
+  if (!lastRaces.length) {
+    alert("Please process races first.");
+    return;
+  }
   const bestRacesByMeeting = {};
   lastRaces.forEach(race => {
-    const meetingKey = (race.meeting || 'Unknown').trim();
+    const meetingKey = (race.meeting || '').toString().trim() || 'Unknown';
     if (!bestRacesByMeeting[meetingKey] || race.prize > bestRacesByMeeting[meetingKey].prize) {
-      bestRacesByMeeting[meetingKey] = race;
+      bestRacesByMeeting[meetingKey] = Object.assign({}, race, { meeting: meetingKey });
     }
   });
-  const bestRaces = Object.values(bestRacesByMeeting).sort((a,b)=>b.prize - a.prize);
+  const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
   displayRaces(bestRaces);
 }
 
-// Display function (unchanged)
+
+// top 10 code charith
+
 function displayRaces(races) {
   const output = document.getElementById('output');
   output.innerHTML = races.map(r => `
@@ -181,3 +186,7 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
+
+
+
+
