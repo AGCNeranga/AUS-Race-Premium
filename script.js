@@ -136,6 +136,51 @@ function showTop40() {
   displayRaces(top40);
 }
 
+// top 10 code charith
+
+function showTop10Meetings() {
+  if (!lastRaces.length) {
+    alert("Please process races first.");
+    return;
+  }
+
+  // Group races by meeting, pick highest prize
+  const bestRacesByMeeting = {};
+  lastRaces.forEach(race => {
+    if (!bestRacesByMeeting[race.meeting] || race.prize > bestRacesByMeeting[race.meeting].prize) {
+      bestRacesByMeeting[race.meeting] = race;
+    }
+  });
+
+  // Convert to array and sort by prize
+  const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
+
+  // Take top 10
+  const top10Meetings = bestRaces.slice(0, 10);
+
+  displayRaces(top10Meetings);
+}
+
+function showAllMeetingsBest() {
+  if (!lastRaces.length) {
+    alert("Please process races first.");
+    return;
+  }
+
+  // Group races by meeting, pick highest prize
+  const bestRacesByMeeting = {};
+  lastRaces.forEach(race => {
+    if (!bestRacesByMeeting[race.meeting] || race.prize > bestRacesByMeeting[race.meeting].prize) {
+      bestRacesByMeeting[race.meeting] = race;
+    }
+  });
+
+  // Convert to array and sort by prize
+  const bestRaces = Object.values(bestRacesByMeeting).sort((a, b) => b.prize - a.prize);
+
+  displayRaces(bestRaces);
+}
+// top 10 code charith
 
 function displayRaces(races) {
   const output = document.getElementById('output');
@@ -150,6 +195,7 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
+
 
 
 
