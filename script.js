@@ -127,6 +127,16 @@ function showTop15() {
   displayRaces(top15);
 }
 
+function showTop40() {
+  if (!lastRaces.length) {
+    alert("Please process races first.");
+    return;
+  }
+  const top40 = [...lastRaces].sort((a, b) => b.prize - a.prize).slice(0, 40);
+  displayRaces(top40);
+}
+
+
 function displayRaces(races) {
   const output = document.getElementById('output');
   output.innerHTML = races.map(r => `
@@ -140,5 +150,6 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
+
 
 
