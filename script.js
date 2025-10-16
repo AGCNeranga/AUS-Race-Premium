@@ -53,7 +53,8 @@ function processText() {
   const text = document.getElementById('raceText').value;
   const output = document.getElementById('output');
   const minPrize = parseInt(document.getElementById('minPrize').value || 0);
-  const maxPrize = parseInt(document.getElementById('maxPrize').value || 99999999);
+  const maxPrize = parseInt(document.getElementById('maxPrize').value || 50000000);
+
 
   const meetingsRaw = document.getElementById('meetingsInput').value;
   const meetingsFilter = meetingsRaw
@@ -185,5 +186,6 @@ function displayRaces(races) {
     </div>
   `).join('');
 }
+
 
 
